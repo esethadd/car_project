@@ -6,6 +6,7 @@
 *************************************************************************/
 
 #include "OBD2UART.h"
+#include <LiquidCrystal.h>
 
 //#define DEBUG Serial
 
@@ -415,11 +416,17 @@ bool COBD::init(OBD_PROTOCOLS protocol)
 	const char *initcmd[] = {"ATZ\r", "ATE0\r", "ATH0\r"};
 	char buffer[64];
 	bool success = false;
+	const int rs = 4, e = 6, d4 = 10, d5 = 11, d6 = 12, d7 = 13;
+	LiquidCrystal lcd(rs, e, d4, d5, d6, d7);
 
 	m_state = OBD_DISCONNECTED;
 	for (unsigned char i = 0; i < sizeof(initcmd) / sizeof(initcmd[0]); i++) {
 		write(initcmd[i]);
 		if (receive(buffer, sizeof(buffer), OBD_TIMEOUT_LONG) == 0) {
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print("False 01");
+			delay(5000);
 			return false;
 		}
 	}
@@ -427,6 +434,10 @@ bool COBD::init(OBD_PROTOCOLS protocol)
 		sprintf_P(buffer, PSTR("ATSP %u\r"), protocol);
 		write(buffer);
 		if (receive(buffer, sizeof(buffer), OBD_TIMEOUT_LONG) == 0 && !strstr(buffer, "OK")) {
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print("False 02");
+			delay(5000);
 			return false;
 		}
 	}

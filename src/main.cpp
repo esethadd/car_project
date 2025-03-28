@@ -41,7 +41,6 @@ void setup() {
   }
   obd.begin(); //start serial communication
   while(obd.init() == false);//Keep attempting to intialize OBD connection until successful 
-  //always returns false, why?
   setScreen(); 
 }
 
@@ -76,22 +75,22 @@ void printValues(byte PID, int val) {
   switch(PID){
     case(PID_RPM):
       lcd.setCursor(4,0);
-      lcd.print(val % 10000);
+      lcd.print(val);
     break;
 
     case(PID_COOLANT_TEMP):
       lcd.setCursor(3,1);
-      lcd.print(val % 1000);
+      lcd.print(val);
     break;
 
     case(PID_SPEED):
       lcd.setCursor(11,1);
-      lcd.print(val % 1000);
+      lcd.print(val);
     break;
 
     case(PID_THROTTLE):
       lcd.setCursor(12,0);
-      lcd.print(val % 100);
+      lcd.print(val);
     break;
 
   }
